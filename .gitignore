@@ -1,0 +1,11 @@
+config/
+# config文件夹下有用户名和密码，不要上传到github上
+
+# 忽略系统文件
+.Ds_Store
+
+
+# 忽略数据文件，避免隐私泄漏
+data/
+
+__pycache__

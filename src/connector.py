@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import time
 
 import pandas as pd
@@ -28,6 +29,7 @@ class Connector:
 
     def _init_data_dir(self):
         """初始化数据目录"""
+
         self.save_data_dir = Config.save_data_dir
         # 检查是否存在data目录，如果不存在就创建
         if not os.path.exists(self.save_data_dir):
@@ -41,14 +43,20 @@ class Connector:
             os.mkdir(self.today_data_dir)
 
         # 清空目录
-        for file in os.listdir(self.today_data_dir):
-            path = os.path.join(self.today_data_dir, file)
-            os.remove(path)
+        self._delete_directory_contents(self.today_data_dir)
 
         # 创建班级学习数据存放的目录
         self.classes_data_dir = os.path.join(self.today_data_dir, "班级学习数据")
         if not os.path.exists(self.classes_data_dir):
             os.mkdir(self.classes_data_dir)
+
+    def _delete_directory_contents(self, directory_path):
+        for item in os.listdir(directory_path):
+            item_path = os.path.join(directory_path, item)
+            if os.path.isfile(item_path):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
 
     def _login(self):
         """登录获取token"""
