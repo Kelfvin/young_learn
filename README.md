@@ -8,11 +8,10 @@
 
 运行完成后生成文件：
 
-
+![Alt text](assets/image-1.png)
 
 项目文档 https://www.yuque.com/kelf/kv37w9?# 《青年大学习数据拉取项目》
 
-![Alt text](assets/image-1.png)
 
 # 使用
 
