@@ -28,3 +28,5 @@ if __name__ == "__main__":
     processor = Processor()
     processor.merge_data()
     processor.find_not_study()
+    # 生成统计图
+    processor.generate_statistics()
