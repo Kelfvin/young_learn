@@ -10,6 +10,10 @@
 
 ![Alt text](assets/image-1.png)
 
+生成统计图
+
+![Alt text](assets/%E5%AD%A6%E4%B9%A0%E6%83%85%E5%86%B5%E7%BB%9F%E8%AE%A1.png)
+
 项目文档 https://www.yuque.com/kelf/kv37w9?# 《青年大学习数据拉取项目》
 
 
