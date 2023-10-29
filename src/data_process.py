@@ -68,7 +68,48 @@ class Processor:
 
     # 找到还没有做青年大学习的团员
     def find_not_study(self):
-        pass
+        """找到还没有做青年大学习的团员"""
+        # 所有团员的列表
+        name_df = pd.read_excel(Config.name_list_path)
+        # 将 组织全称 列的数据 ）前的东西去掉
+        name_df["组织全称"] = name_df["组织全称"].apply(lambda x: x.split("系")[1])
+
+        # 已经学习的团员的df
+        date = time.strftime("%Y-%m-%d", time.localtime())
+        learned_file_path = os.path.join(self.today_data_dir, f"青年大学习名单-{date}.xlsx")
+
+        learned_df = pd.read_excel(learned_file_path, sheet_name="总学习情况")
+
+        # 找到还没有学习的团员
+        not_learned_df = name_df[~name_df["姓名"].isin(learned_df["姓名"])]
+
+        # 只保留姓名和组织全称两列
+        not_learned_df = not_learned_df[["姓名", "组织全称"]]
+
+        # 根据组织全称进行分组，不同的名称放在不同的sheet中
+        # 获取组织全称
+        class_names = not_learned_df["组织全称"].unique()
+        class_names.sort()
+        # 先放总表
+        not_learned_df.to_excel(
+            os.path.join(self.today_data_dir, f"未学习团员名单-{date}.xlsx"),
+            sheet_name="总未学习名单",
+            index=False,
+        )
+        # 创建writer
+        date = time.strftime("%Y-%m-%d", time.localtime())
+        writer = pd.ExcelWriter(
+            os.path.join(self.today_data_dir, f"未学习团员名单-{date}.xlsx"),
+            engine="xlsxwriter",
+        )
+
+        # 将数据写入excel
+        for class_name in class_names:
+            not_learned_df[not_learned_df["组织全称"] == class_name].to_excel(
+                writer, sheet_name=class_name, index=False
+            )
+        # 关闭writer
+        writer.close()
 
     # 画出学习情况的统计图
     def generate_statistics(self):
@@ -113,3 +154,4 @@ if __name__ == "__main__":
     processor = Processor()
     processor.merge_data()
     processor.generate_statistics()
+    processor.find_not_study()

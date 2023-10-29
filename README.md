@@ -23,6 +23,10 @@
 
 https://www.yuque.com/kelf/kv37w9/xiq9t9stev517273?singleDoc# 《使用》
 
+## 导入智慧团建导出名单
+
+将智慧团建导出的名单放入config/ 目录下，文件名重命名为`name_list.xlsx`。
+
 # 更新日志
 
 https://www.yuque.com/kelf/kv37w9/lvq6wnwmrcstsh3x?singleDoc# 《更新日志》
