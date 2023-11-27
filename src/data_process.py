@@ -115,7 +115,12 @@ class Processor:
     def generate_statistics(self):
         """画出学习情况的统计图"""
         # 设置中文字体
-        plt.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
+        # 根据不同的系统设置不同的字体
+        if os.name == "nt":
+            # windows
+            plt.rcParams["font.sans-serif"] = ["SimHei"]
+        else:
+            plt.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
         # 遍历编辑文件，统计各个班级的学习人数
         study_record_list = []
         # 文件名
