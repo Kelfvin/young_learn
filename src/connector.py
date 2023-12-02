@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 import time
 
@@ -126,6 +127,10 @@ class Connector:
                 "学习人数": a_class_data["orgStagesTotalNum"],
             }
 
+        # 对组织名进行修改
+        # 使用正则表达式，软件工程2020级1班团支部 -> 2020级1班
+        df["组织名"] = df["组织名"].apply(lambda x: re.findall(r"([0-9]+级.*)团支部", x)[0])
+
         path = os.path.join(self.today_data_dir, "专业大学习数据.xlsx")
         df.to_excel(path, index=False)
 
@@ -157,5 +162,7 @@ class Connector:
 
 
 if __name__ == "__main__":
-    connector = Connector()
-    connector.get_major_study_data()
+    df = pd.read_excel("../data/2023-12-02/专业大学习数据.xlsx")
+    # 使用正则表达式，软件工程2020级1班团支部 -> 2020级1班，用团支部作为标志，且通过获取捕获组的方式获取班级名
+    df["组织名"] = df["组织名"].apply(lambda x: re.findall(r"([0-9]+级.*)团支部", x)[0])
+    print(df)
