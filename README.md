@@ -14,19 +14,39 @@
 
 ![Alt text](assets/%E5%AD%A6%E4%B9%A0%E6%83%85%E5%86%B5%E7%BB%9F%E8%AE%A1.png)
 
-项目文档 https://www.yuque.com/kelf/kv37w9?# 《青年大学习数据拉取项目》
-
 
 # 使用
 
-请查看语雀文档：
+## 0. 安装依赖
 
-https://www.yuque.com/kelf/kv37w9/xiq9t9stev517273?singleDoc# 《使用》
+```bash
+pip install -r requirements.txt
+```
 
-## 导入智慧团建导出名单
+## 1. 导入智慧团建导出名单
 
-将智慧团建导出的名单放入config/ 目录下，文件名重命名为`name_list.xlsx`。
+将名单文件(xlsx)放入config/ 目录下，文件名重命名为`name_list.xlsx`。
+
+表格格式为:
+
+| 学号* | 姓名 | 班级 |
+| --- | --- | --- |
+
+*表示可选
+
+## 2. 运行
+
+```bash
+cd src
+python main.py
+```
+
+## 3. 查看结果
+
+结果在`data/`目录下。以日期命名的文件夹中，包含了当天的数据。
 
 # 更新日志
 
-https://www.yuque.com/kelf/kv37w9/lvq6wnwmrcstsh3x?singleDoc# 《更新日志》
+## 2024-3-30
+
+简化了名单的格式，方便自定义名单。

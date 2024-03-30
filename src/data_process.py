@@ -1,7 +1,6 @@
 # 用于处理数据
 
 import os
-import re
 import time
 import warnings
 
@@ -73,26 +72,26 @@ class Processor:
     # 找到还没有做青年大学习的团员
     def find_not_study(self):
         """找到还没有做青年大学习的团员"""
-        # 所有团员的列表
+        # 所有人员名单信息（学号	姓名	班级） eg: 2022170201xx 张三	22级1班
         name_df = pd.read_excel(Config.name_list_path)
-        # 将 组织全称 列的数据 ）前的东西去掉
-        name_df["组织全称"] = name_df["组织全称"].apply(lambda x: x.split("系")[1])
 
         # 已经学习的团员的df
         date = time.strftime("%Y-%m-%d", time.localtime())
-        learned_file_path = os.path.join(self.today_data_dir, f"青年大学习名单-{date}.xlsx")
+        learned_file_path = os.path.join(
+            self.today_data_dir, f"青年大学习名单-{date}.xlsx"
+        )
 
         learned_df = pd.read_excel(learned_file_path, sheet_name="总学习情况")
 
         # 找到还没有学习的团员
         not_learned_df = name_df[~name_df["姓名"].isin(learned_df["姓名"])]
 
-        # 只保留姓名和组织全称两列
-        not_learned_df = not_learned_df[["姓名", "组织全称"]]
+        # 只保留姓名和班级两列
+        not_learned_df = not_learned_df[["姓名", "班级"]]
 
-        # 根据组织全称进行分组，不同的名称放在不同的sheet中
-        # 获取组织全称
-        class_names = not_learned_df["组织全称"].unique()
+        # 根据班级进行分组，不同的名称放在不同的sheet中
+        # 获取班级
+        class_names = not_learned_df["班级"].unique()
         class_names.sort()
         # 先放总表
         not_learned_df.to_excel(
@@ -109,7 +108,7 @@ class Processor:
 
         # 将数据写入excel
         for class_name in class_names:
-            not_learned_df[not_learned_df["组织全称"] == class_name].to_excel(
+            not_learned_df[not_learned_df["班级"] == class_name].to_excel(
                 writer, sheet_name=class_name, index=False
             )
         # 关闭writer
@@ -130,8 +129,8 @@ class Processor:
 
         # 画图
         plt.figure(figsize=(10, 5), dpi=150)
-        plt.bar(df["组织名"], df["学习人数"])
-        plt.xlabel("组织名")
+        plt.bar(df["班级"], df["学习人数"])
+        plt.xlabel("班级")
         plt.ylabel("学习人数")
         plt.title("学习情况统计")
         # 显示数字
@@ -148,25 +147,26 @@ class Processor:
         """生成学习率的饼图"""
         # 读取团员名单
         name_list_df = pd.read_excel(Config.name_list_path)
-        # 对组织名称进行简化，正则表达式
-        name_list_df["组织全称"] = name_list_df["组织全称"].apply(
-            lambda x: re.findall(r"([0-9]+级.*)团支部", x)[0]
-        )
 
         # 读取专业大学习的数据
         major_study_df = pd.read_excel(self.major_statistic_data_path)
         # 统计name_list_df中的人数
 
         # 统计团员人数
-        name_list_df = name_list_df.groupby("组织全称").count()
+        name_list_df = name_list_df.groupby("班级").count()
         name_list_df.reset_index(inplace=True)
-        name_list_df.rename(columns={"姓名": "团员人数", "组织全称": "组织名"}, inplace=True)
+        name_list_df.rename(
+            columns={
+                "姓名": "团员人数",
+            },
+            inplace=True,
+        )
 
         print(name_list_df)
         print(major_study_df)
 
         # 合并两个df
-        df = pd.merge(major_study_df, name_list_df, on="组织名")
+        df = pd.merge(major_study_df, name_list_df, on="班级")
         # 计算学习率
         df["学习率"] = df["学习人数"] / df["团员人数"]
         # 画图
@@ -182,7 +182,7 @@ class Processor:
         # 每个组织画一个饼状图，画在一张图上
         plt.figure(figsize=(10, 5), dpi=150)
         # 计算子图的行数和列数
-        cols = df.shape[0] // 2 + 1
+        cols = df.shape[0] // 2
         rows = 2
 
         for i in range(df.shape[0]):
@@ -192,7 +192,7 @@ class Processor:
                 autopct="%1.1f%%",
             )
             #
-            plt.title(df["组织名"][i])
+            plt.title(df["班级"][i])
 
         # 为整个图添加一个总的图标，蓝色的是学习人数，橙色的是未学习人数，要求有颜色
         plt.legend(

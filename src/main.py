@@ -30,3 +30,4 @@ if __name__ == "__main__":
     processor.find_not_study()
     # 生成统计图
     processor.generate_statistics()
+    processor.generate_study_rate_pie()

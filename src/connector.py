@@ -128,8 +128,10 @@ class Connector:
             }
 
         # 对组织名进行修改
-        # 使用正则表达式，软件工程2020级1班团支部 -> 2020级1班
-        df["组织名"] = df["组织名"].apply(lambda x: re.findall(r"([0-9]+级.*)团支部", x)[0])
+        # 使用正则表达式，软件工程2020级1班团支部 -> 20级1班
+        df["班级"] = df["组织名"].apply(
+            lambda x: re.findall(r"[0-9]{2}([0-9]+级.*)团支部", x)[0]
+        )
 
         path = os.path.join(self.today_data_dir, "专业大学习数据.xlsx")
         df.to_excel(path, index=False)
